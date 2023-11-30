@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết sản phẩm</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/slideshow.css}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f1f1f1;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .product-details {
+            display: flex;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .product-images {
+            flex: 0 0 200px;
+            margin-right: 20px;
+        }
+
+        .product-images img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .product-info {
+            flex: 1;
+        }
+
+        .product-info h1 {
+            font-size: 24px;
+            margin: 0 0 10px;
+        }
+
+        .product-info h4 {
+            color: rgb(227, 73, 73);
+            margin: 0 0 10px;
+        }
+
+        .product-info span {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .home{
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        .home button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #059862;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .product-buttons{
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .product-buttons button {
+            margin-left: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            color: #fff;
+            background-color: rgb(227, 73, 73);
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .product-buttons button:hover {
+            background-color: rgb(207, 53, 53);
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="product-details">
+        <div class="product-images">
+<!--            <img th:src="${productdetails.getImages_1()}" alt="ProductImage">-->
+            <div class="slideshow-container">
+
+                <!-- Full-width images with number and caption text -->
+                <div class="mySlides fade">
+                    <div class="numbertext">1 / 3</div>
+                    <img th:src="@{${productdetails.getImages_1()}}" style="width:100%">
+                    <div class="text">Ảnh 1</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <div class="numbertext">2 / 3</div>
+                    <img th:src="@{${productdetails.getImages_2()}}" style="width:100%">
+                    <div class="text">Ảnh 2</div>
+                </div>
+
+                <div class="mySlides fade">
+                    <div class="numbertext">3 / 3</div>
+                    <img th:src="@{${productdetails.getImages_3()}}" style="width:100%">
+                    <div class="text">Ảnh 3</div>
+                </div>
+
+                <!-- Next and previous buttons -->
+                <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+                <a class="next" onclick="plusSlides(1)">&#10095;</a>
+            </div>
+            <br>
+
+            <!-- The dots/circles -->
+            <div style="text-align:center">
+                <span class="dot" onclick="currentSlide(1)"></span>
+                <span class="dot" onclick="currentSlide(2)"></span>
+                <span class="dot" onclick="currentSlide(3)"></span>
+            </div>
+        </div>
+        <div class="product-info">
+            <h1>Tên sản phẩm: <span th:text="${productdetails.getName()}" style="color: dodgerblue;"></span></h1>
+            <h2>Giá: <span th:text="${productdetails.getPrice()} + ' Vnd'"  style="color: red;"></span></h2>
+            <h5>Thương hiệu: <span th:text="${productdetails.getBrand()}"></span></h5>
+            <h5>Loại: <span th:text="${productdetails.getCategory()}"></span></h5>
+            <h5>Dòng sản phẩm: <span th:text="${productdetails.getType()}"></span></h5>
+            <h5>Màu sắc: <span th:text="${productdetails.getColor()}"></span></h5>
+
+            <h5>Mô tả: <span th:text="${productdetails.getDescribeSpecific()}"></span></h5>
+
+        </div>
+    </div>
+    <div th:if="${iduser == 0}" class="home">
+        <a th:href="@{/home}">
+            <button>Trang chủ</button>
+        </a>
+    </div>
+    <div th:unless="${iduser == 0}" class="home">
+        <a th:href="@{/homeuser/{iduser} (iduser = ${iduser})}">
+            <button>Trang chủ</button>
+        </a>
+    </div>
+    <div class="product-buttons">
+        <form th:if="${iduser == 0}" th:action="@{/login}">
+            <button type="submit"  th:if="${iduser == 0}" onclick="addToCartGuest()"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</button>
+<!--            <button type="button"  th:unless="${iduser == 0}" th:href="@{/details/product/{id}/{iduser} (id = ${productdetails.getIdProduct()}, iduser = ${iduser})}" onclick="addToCartOfUser()"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</button>-->
+        </form>
+        <form th:unless="${iduser == 0}" th:action="@{/addproduct-to-shopping-cart/{iduser}/{idproduct} (idproduct = ${productdetails.getIdProduct()}, iduser = ${iduser})}">
+<!--            <button type="button"  th:if="${iduser == 0}" th:href="@{/login}" onclick="addToCartGuest()"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</button>-->
+            <button type="submit"  th:unless="${iduser == 0}"  onclick="addToCartOfUser()"><i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng</button>
+        </form>
+
+    </div>
+</div>
+
+    <script>
+        function addToCartGuest() {
+            alert("Vui lòng đăng nhập để thêm vào giỏ hàng");
+        }
+        function addToCartOfUser() {
+            alert("Đã thêm vào giỏ hàng");
+        }
+
+    </script>
+</body>
+
+<script th:src="@{/js/slideshow.js}"></script>
+</html>
